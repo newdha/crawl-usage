@@ -89,4 +89,7 @@ ROBOTSTXT_OBEY = True
 # HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
 FEED_EXPORT_ENCODING = 'utf-8'
-FEED_EXPORT_FIELDS = ['creation_time', 'score', 'useful_vote_count', 'reply_count', 'content', 'after_user_comment']
+# Field for comment
+#FEED_EXPORT_FIELDS = ['creation_time', 'score', 'useful_vote_count', 'reply_count', 'content', 'after_user_comment']
+# Field for question
+FEED_EXPORT_FIELDS = ['id', 'created', 'content', 'answer_created', 'answer_content']

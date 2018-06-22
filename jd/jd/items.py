@@ -16,3 +16,11 @@ class CommentItem(scrapy.Item):
     reply_count = scrapy.Field()
     after_user_comment = scrapy.Field()
     pass
+
+
+class QuestionItem(scrapy.Item):
+    id = scrapy.Field()
+    content = scrapy.Field()
+    created = scrapy.Field()
+    answer_created = scrapy.Field()
+    answer_content = scrapy.Field()

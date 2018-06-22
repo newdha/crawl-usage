@@ -10,7 +10,6 @@ class CommentSpider(scrapy.Spider):
     allowed_domains = ['jd.com']
     start_url = 'http://jd.com/'
     cur_page = 0
-    retry = True
 
     """
     product_id: 产品编号
@@ -27,25 +26,23 @@ class CommentSpider(scrapy.Spider):
             self.start_url = 'http://sclub.jd.com/comment/productPageComments.action?productId=%s' % product_id
         self.start_url = self.start_url + '&score=0&sortType=%s&pageSize=10&isShadowSku=0&fold=1' % sort_type
         
-    def _page_segment(self):
-        return '&page=%s' % self.cur_page
+    def _request_url(self, page):
+        return self.start_url + '&page=%s' % page
         
     def start_requests(self):
-        url = self.start_url + self._page_segment()
-        yield scrapy.Request(url=url, callback=self.parse)
+        yield scrapy.Request(url=self._request_url(self.cur_page), callback=self.parse)
         
     def parse(self, response):
         self.logger.info('Parse function called on %s', response.url)
         res = json.loads(response.text)
         
         if len(res['comments']) > 0:
-            self.retry = True
             for comment in res['comments']:
                 comment_item = CommentItem(content=comment['content'], creation_time=comment['creationTime'], score=comment['score'], useful_vote_count=comment['usefulVoteCount'], reply_count=comment['replyCount'])
                 if 'afterUserComment' in comment:
                     comment_item['after_user_comment'] = comment['afterUserComment']['hAfterUserComment']['content']
                 yield comment_item
             self.cur_page += 1
-            yield scrapy.Request(url=self.start_url + self._page_segment(), callback=self.parse)
+            yield scrapy.Request(url=self._request_url(self.cur_page), callback=self.parse)
         else:
             self.logger.warn('Stop crawl at page %i', self.cur_page)
