@@ -1,4 +1,6 @@
 import json
+from urllib.parse import parse_qs
+from urllib.parse import urlparse
 
 import scrapy
 
@@ -34,6 +36,9 @@ class CommentSpider(scrapy.Spider):
         
     def parse(self, response):
         self.logger.info('Parse function called on %s', response.url)
+        qs = parse_qs(urlparse(response.url).query)
+        page = int(qs['page'][0])
+        
         res = json.loads(response.text)
         
         if len(res['comments']) > 0:
@@ -42,7 +47,6 @@ class CommentSpider(scrapy.Spider):
                 if 'afterUserComment' in comment:
                     comment_item['after_user_comment'] = comment['afterUserComment']['hAfterUserComment']['content']
                 yield comment_item
-            self.cur_page += 1
-            yield scrapy.Request(url=self._request_url(self.cur_page), callback=self.parse)
+            yield scrapy.Request(url=self._request_url(page + 1), callback=self.parse)
         else:
-            self.logger.warn('Stop crawl at page %i', self.cur_page)
+            self.logger.warn('Stop crawl at page %i', page)

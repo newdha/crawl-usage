@@ -1,4 +1,6 @@
 import json
+from urllib.parse import parse_qs
+from urllib.parse import urlparse
 
 import scrapy
 
@@ -10,7 +12,7 @@ class CommentSpider(scrapy.Spider):
     allowed_domains = ['jd.com']
     question_url = 'http://jd.com/'
     answer_url = 'http://jd.com/'
-    cur_question_id = 0
+    
     cur_question_page = 1
     cur_answer_page = 1
 
@@ -37,21 +39,24 @@ class CommentSpider(scrapy.Spider):
     
     def parse_answer(self, response):
         self.logger.info('Parse function called on %s', response.url)
-        res = json.loads(response.text)
+        qs = parse_qs(urlparse(response.url).query)
+        question_id = qs['questionId'][0]
+        cur_page = int(qs['page'][0])
         
+        res = json.loads(response.text)
         if len(res['answers']) > 0:
             for answer in res['answers']:
-                answer_item = QuestionItem(id=self.cur_question_id, answer_content=answer['content'], answer_created=answer['created'])
+                answer_item = QuestionItem(id=question_id, answer_content=answer['content'], answer_created=answer['created'])
                 yield answer_item
-            
-            self.cur_answer_page += 1
-            yield scrapy.Request(url=self._answer_url(self.cur_question_id, self.cur_answer_page), callback=self.parse_answer)
+                
+            yield scrapy.Request(url=self._answer_url(question_id, cur_page + 1), callback=self.parse_answer)
         else:
-            self.logger.warn('Stop crawl answer at page %i', self.cur_answer_page)
-            self.cur_answer_page = 1
+            self.logger.warn('Stop crawl answer at page %i', cur_page)
         
     def parse_question(self, response):
         self.logger.info('Parse function called on %s', response.url)
+        qs = parse_qs(urlparse(response.url).query)
+        cur_page = int(qs['page'][0])
         res = json.loads(response.text)
         
         if len(res['questionList']) > 0:
@@ -59,11 +64,9 @@ class CommentSpider(scrapy.Spider):
                 question_item = QuestionItem(id=question['id'], content=question['content'], created=question['created'])
                 yield question_item
                 
-                self.cur_question_id = question['id']
                 if question['answerCount'] > 0:
-                    yield scrapy.Request(url=self._answer_url(self.cur_question_id, self.cur_answer_page), callback=self.parse_answer)
+                    yield scrapy.Request(url=self._answer_url(question['id'], self.cur_answer_page), callback=self.parse_answer)
                
-            self.cur_question_page += 1
-            yield scrapy.Request(url=self._question_url(self.cur_question_page), callback=self.parse_question)
+            yield scrapy.Request(url=self._question_url(cur_page + 1), callback=self.parse_question)
         else:
-            self.logger.warn('Stop crawl question at page %i', self.cur_question_page)
+            self.logger.warn('Stop crawl question at page %i', cur_page)
