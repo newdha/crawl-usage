@@ -30,7 +30,10 @@ if __name__ == '__main__':
     with open(input_file, newline='', encoding='utf-8') as csvfile:
         reader = csv.DictReader(csvfile, delimiter=',')
         for row in reader:
-            comment = row['content'] + '。' + row['after_user_comment']
-            contents.append(comment)
+            if 'score' in row:
+                content = row['content'] + '。' + row['after_user_comment']
+            else:
+                content = row['content'] + '。' + row['answer_content']
+            contents.append(content)
     idf = utils.compute_idf(contents, stop_words)
     utils.save(idf, output_file)
