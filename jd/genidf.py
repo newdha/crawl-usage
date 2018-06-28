@@ -24,7 +24,7 @@ if __name__ == '__main__':
     stop_words = {}
       
     if stop_words_file:
-        stop_words = stop_words.fromkeys([ line.rstrip() for line in open(stop_words_file, encoding='utf-8') ])
+        stop_words = [ line.rstrip() for line in open(stop_words_file, encoding='utf-8') ]
       
     contents = []
     with open(input_file, newline='', encoding='utf-8') as csvfile:

@@ -46,11 +46,12 @@ def compute_idf(contents, stopwords):
     # 计算idf
     idf_dict = {}
     n = len(W)
-    # idf = log(n / docs(w, D))
+
     for w in list(W):
         if len(w.strip()) > 0:
             idf = math.log(n * 1.0 / docs(w, D))
             idf_dict[w] = idf
+    
     return idf_dict
 
 

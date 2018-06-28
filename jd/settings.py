@@ -90,10 +90,6 @@ ROBOTSTXT_OBEY = True
 
 FEED_EXPORT_ENCODING = 'utf-8'
 # Field for comment
-FEED_EXPORT_FIELDS = ['creation_time', 'score', 'useful_vote_count', 'reply_count', 'content', 'after_user_comment']
-# Field for comment price
-#FEED_EXPORT_FIELDS = ['content', 'after_user_comment']
+#FEED_EXPORT_FIELDS = ['creation_time', 'score', 'useful_vote_count', 'reply_count', 'content', 'after_user_comment']
 # Field for question
-#FEED_EXPORT_FIELDS = ['id', 'created', 'content', 'answer_created', 'answer_content']
-# Field for question price
-#FEED_EXPORT_FIELDS = ['content', 'answer_content']
+FEED_EXPORT_FIELDS = ['id', 'created', 'content', 'answer_created', 'answer_content']

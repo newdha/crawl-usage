@@ -9,12 +9,10 @@ Created on 2018年6月27日
 import argparse
 import csv
 
-import jieba.analyse
-
-import utils
+import jieba
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='按tdidf重新排序')
+    parser = argparse.ArgumentParser(description='按idf之和重新排序')
     parser.add_argument('input_file', help='Input file', metavar='<inputfile>')
     parser.add_argument('output_file', help='Output file', metavar='<outputfile>')
     parser.add_argument('-sw', '--stopwords', dest='stop_words_file', help='Stop words file', metavar='<file>')
@@ -25,11 +23,16 @@ if __name__ == '__main__':
     output_file = args.output_file
     idf_file = args.idf_file
     stop_words_file = args.stop_words_file
-    stop_words = {}
+    stop_words = []
+    idfs = {}
     if stop_words_file:
-        jieba.analyse.set_stop_words(stop_words_file)
+        stop_words = [ line.rstrip() for line in open(stop_words_file, encoding='utf-8') ]
+        
     if idf_file:
-        jieba.analyse.set_idf_path(idf_file);
+        content = open(idf_file, 'rb').read().decode('utf-8')
+        for line in content.splitlines():
+            word, freq = line.strip().split(' ')
+            idfs[word] = float(freq)
     
     scored_rows = []
     field_names = []
@@ -41,8 +44,14 @@ if __name__ == '__main__':
                 content = row['content'] + '。' + row['after_user_comment']
             else:
                 content = row['content'] + '。' + row['answer_content']
-            tags = jieba.analyse.extract_tags(content, topK=None, withWeight=True)
-            scores = [x[1] for x in tags]
+            words = jieba.cut(content)
+            words_set = set()
+            for word in words:
+                word = word.strip()
+                if word not in stop_words:  
+                    if word != '\t':  
+                        words_set.add(word)
+            scores = [idfs[word] for word in words_set]
             scored_rows.append((row, sum(scores)))
             
     sorted_rows = sorted(scored_rows, key=lambda d: d[1], reverse=True)
