@@ -26,4 +26,4 @@ python jd/genidf.py -sw ../stop_words.txt ../7564605_question.csv ../question_id
 绍兴
 慈溪
 
-scrapy crawl price -a city_id=14 -a start_time=2018-07-14 -a end_time=2018-07-15 -o test.json
+scrapy crawl price -a cities=cities.txt -a start_time=2018-07-14 -a end_time=2018-07-15 -o test.csv

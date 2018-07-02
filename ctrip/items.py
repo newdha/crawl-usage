@@ -9,7 +9,7 @@ import scrapy
 
 
 class PriceItem(scrapy.Item):
-    id = scrapy.Field()
+    city_name = scrapy.Field()
     name = scrapy.Field()
     url = scrapy.Field()
     score = scrapy.Field()
