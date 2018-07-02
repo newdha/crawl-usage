@@ -10,6 +10,7 @@ import argparse
 import csv
 
 import jieba
+import utils
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='按idf之和重新排序')
@@ -21,18 +22,16 @@ if __name__ == '__main__':
      
     input_file = args.input_file
     output_file = args.output_file
-    idf_file = args.idf_file
+    
     stop_words_file = args.stop_words_file
     stop_words = []
-    idfs = {}
     if stop_words_file:
-        stop_words = [ line.rstrip() for line in open(stop_words_file, encoding='utf-8') ]
-        
+        stop_words = utils.read_lines(stop_words_file)
+    
+    idf_file = args.idf_file    
+    idfs = {}
     if idf_file:
-        content = open(idf_file, 'rb').read().decode('utf-8')
-        for line in content.splitlines():
-            word, freq = line.strip().split(' ')
-            idfs[word] = float(freq)
+        idfs = utils.read_pairs(idf_file)
     
     scored_rows = []
     field_names = []

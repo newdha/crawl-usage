@@ -6,6 +6,7 @@ Created on 2018年6月28日
 import math
 
 import jieba
+from matplotlib.font_manager import path
 
 
 def docs(w, D):
@@ -67,3 +68,15 @@ def save(idf_dict, path):
     for idf in sorted_idfs:
         f.write(str(idf[0]) + " " + str(idf[1]) + "\n")
     f.close()
+
+
+def read_lines(path):
+    return [ line.rstrip() for line in open(path, encoding='utf-8') ]
+
+
+def read_pairs(path):
+    pairs = {}
+    content = open(path, 'rb').read().decode('utf-8')
+    for line in content.splitlines():
+        word, freq = line.strip().split(' ')
+        pairs[word] = float(freq)
