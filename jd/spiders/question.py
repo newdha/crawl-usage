@@ -16,13 +16,12 @@ class CommentSpider(scrapy.Spider):
     cur_question_page = 1
     cur_answer_page = 1
 
-    """
-    product_id: 产品编号
-    same_product：只看当前商品评价
-    sort_type：6/时间排序， 5/推荐排序
-    """
-
     def __init__(self, product_id=None, page=1, *args, **kwargs):
+        """
+        product_id: 产品编号
+        same_product：只看当前商品评价
+        sort_type：6/时间排序， 5/推荐排序
+        """
         super(CommentSpider, self).__init__(*args, **kwargs)
         self.cur_question_page = int(page)
         self.question_url = 'http://question.jd.com/question/getQuestionAnswerList.action?productId=%s' % product_id

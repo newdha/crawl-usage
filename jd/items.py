@@ -15,7 +15,6 @@ class CommentItem(scrapy.Item):
     score = scrapy.Field()
     reply_count = scrapy.Field()
     after_user_comment = scrapy.Field()
-    pass
 
 
 class QuestionItem(scrapy.Item):
