@@ -19,8 +19,9 @@ class PriceSpider(scrapy.Spider):
     cities = ''
     order_by = '1'
     star = '5'
+    equip = ''
     
-    def __init__(self, cities=None, start_time=None, end_time=None, order_by='1', star='5', *args, **kwargs):
+    def __init__(self, cities=None, start_time=None, end_time=None, order_by='1', star='5', equip='', *args, **kwargs):
         '''
         city_id: 城市列表文件
         start_time：开始时间
@@ -29,10 +30,11 @@ class PriceSpider(scrapy.Spider):
         '''
         super(PriceSpider, self).__init__(*args, **kwargs)
         self.cities = cities
-        self.start_time = datetime.datetime.strptime(start_time, '%Y-%m-%d')
-        self.end_time = datetime.datetime.strptime(end_time, '%Y-%m-%d')
+        self.start_time = start_time
+        self.end_time = end_time
         self.order_by = order_by
         self.star = star
+        self.equip = equip
         
     def _query_data(self, city_id=None, start_time=None, end_time=None, page=1):
         return {
@@ -42,9 +44,10 @@ class PriceSpider(scrapy.Spider):
             'checkOut' : datetime.datetime.strftime(end_time, '%Y-%m-%d'),
             'cityId' : str(city_id),
             'star': self.star,
+            'equip': self.equip,
             'orderby': self.order_by,
             'ordertype': '1',
-            'page': str(page)
+            'page': str(page),
         }
     
     def _request(self, city_id=None, start_time=None, end_time=None, page='1'):
@@ -58,12 +61,26 @@ class PriceSpider(scrapy.Spider):
     
     def start_requests(self):
         cities = utils.read_lines(self.cities)
-        delta = (self.end_time - self.start_time).days;
-        for offset in range(delta):
-            start_time = self.start_time + datetime.timedelta(days=offset)
-            end_time = self.start_time + datetime.timedelta(days=offset + 1)
-            for city_id in cities:
-                yield self._request(city_id=city_id, start_time=start_time, end_time=end_time)
+        
+        if ',' in self.start_time:
+            for d in self.start_time.split(','):
+                start_time = datetime.datetime.strptime(d, '%Y-%m-%d')
+                end_time = start_time + datetime.timedelta(days=1)
+                for city_id in cities:
+                    yield self._request(city_id=city_id, start_time=start_time, end_time=end_time) 
+        else:
+            self.start_time = datetime.datetime.strptime(self.start_time, '%Y-%m-%d')
+            if self.end_time:
+                self.end_time = datetime.datetime.strptime(self.end_time, '%Y-%m-%d')
+            else:
+                self.end_time = self.start_time + datetime.timedelta(days=1)
+            
+            delta = (self.end_time - self.start_time).days;
+            for offset in range(delta):
+                start_time = self.start_time + datetime.timedelta(days=offset)
+                end_time = start_time + datetime.timedelta(days=1)
+                for city_id in cities:
+                    yield self._request(city_id=city_id, start_time=start_time, end_time=end_time)
 
     def _url(self, url):
         return 'http://hotels.ctrip.com/' + url
