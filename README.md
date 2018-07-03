@@ -17,4 +17,4 @@ scrapy crawl price -a cities=cities.txt -a start_time=2018-07-14 -a end_time=201
 scrapy crawl price -a cities=cities.txt -a start_time=2018-07-15 -a end_time=2018-07-16 -o 2018-07-15.csv
 scrapy crawl price -a cities=cities.txt -a start_time=2018-07-16 -a end_time=2018-07-17 -o 2018-07-16.csv
 
-scrapy crawl price -a cities=cities.txt -a start_time=2018-07-01 -a end_time=2018-07-07 -o test.csv
+scrapy crawl price -a cities=cities.txt -a start_time=2018-07-06 -a end_time=2018-08-03 -o test.csv

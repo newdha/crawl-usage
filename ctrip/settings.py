@@ -89,4 +89,4 @@ ROBOTSTXT_OBEY = True
 # HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
 FEED_EXPORT_ENCODING = 'utf-8'
-FEED_EXPORT_FIELDS = ['city_name', 'name', 'url', 'score', 'dpcount', 'date', 'lowest_price']
+FEED_EXPORT_FIELDS = ['id', 'name', 'city_name', 'url', 'score', 'dpcount', 'date', 'lowest_price']

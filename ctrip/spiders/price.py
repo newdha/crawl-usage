@@ -88,7 +88,15 @@ class PriceSpider(scrapy.Spider):
         
         if len(res['hotelPositionJSON']) > 0:
             for hotel in res['hotelPositionJSON']:
-                hotel_item = PriceItem(city_name=cityname, name=hotel['name'], url=self._url(hotel['url']), score=hotel['score'], dpcount=hotel['dpcount'], date=main_data['starttime'])
+                hotel_item = PriceItem(
+                    id=hotel['id'],
+                    name=hotel['name'],
+                    city_name=cityname,
+                    url=self._url(hotel['url']),
+                    score=hotel['score'],
+                    dpcount=hotel['dpcount'],
+                    date=main_data['starttime']
+                )
                 if hotel['id'] in prices:
                     hotel_item['lowest_price'] = prices[hotel['id']]
                 yield hotel_item
