@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import datetime
 import json
 
 import scrapy
@@ -28,17 +29,17 @@ class PriceSpider(scrapy.Spider):
         '''
         super(PriceSpider, self).__init__(*args, **kwargs)
         self.cities = cities
-        self.start_time = start_time
-        self.end_time = end_time
+        self.start_time = datetime.datetime.strptime(start_time, '%Y-%m-%d')
+        self.end_time = datetime.datetime.strptime(end_time, '%Y-%m-%d')
         self.order_by = order_by
         self.star = star
         
-    def _query_data(self, city_id=None, page=1):
+    def _query_data(self, city_id=None, start_time=None, end_time=None, page=1):
         return {
-            'StartTime' : self.start_time,
-            'DepTime' : self.end_time,
-            'checkIn' : self.start_time,
-            'checkOut' : self.end_time,
+            'StartTime' : datetime.datetime.strftime(start_time, '%Y-%m-%d'),
+            'DepTime' : datetime.datetime.strftime(end_time, '%Y-%m-%d'),
+            'checkIn' : datetime.datetime.strftime(start_time, '%Y-%m-%d'),
+            'checkOut' : datetime.datetime.strftime(end_time, '%Y-%m-%d'),
             'cityId' : str(city_id),
             'star': self.star,
             'orderby': self.order_by,
@@ -46,8 +47,8 @@ class PriceSpider(scrapy.Spider):
             'page': str(page)
         }
     
-    def _request(self, city_id=None, page='1'):
-        form_data = self._query_data(city_id, page)
+    def _request(self, city_id=None, start_time=None, end_time=None, page='1'):
+        form_data = self._query_data(city_id, start_time, end_time, page)
         return scrapy.FormRequest(
             url=self.start_url,
             method='POST',
@@ -57,8 +58,12 @@ class PriceSpider(scrapy.Spider):
     
     def start_requests(self):
         cities = utils.read_lines(self.cities)
-        for city_id in cities:
-            yield self._request(city_id=city_id)
+        delta = (self.end_time - self.start_time).days;
+        for offset in range(delta):
+            start_time = self.start_time + datetime.timedelta(days=offset)
+            end_time = self.start_time + datetime.timedelta(days=offset + 1)
+            for city_id in cities:
+                yield self._request(city_id=city_id, start_time=start_time, end_time=end_time)
 
     def _url(self, url):
         return 'http://hotels.ctrip.com/' + url
@@ -70,6 +75,9 @@ class PriceSpider(scrapy.Spider):
         main_data = res['HotelMaiDianData']['value']
         page = int(main_data['pageindex'])
         cityname = main_data['cityname']
+        cityid = main_data['cityid']
+        starttime = datetime.datetime.strptime(main_data['starttime'], '%Y-%m-%d')
+        endtime = datetime.datetime.strptime(main_data['endtime'], '%Y-%m-%d') 
         
         total_page = int(Selector(text=res['paging']).xpath('//@data-pagecount').extract()[0])
         
@@ -80,12 +88,12 @@ class PriceSpider(scrapy.Spider):
         
         if len(res['hotelPositionJSON']) > 0:
             for hotel in res['hotelPositionJSON']:
-                hotel_item = PriceItem(city_name=cityname, name=hotel['name'], url=self._url(hotel['url']), score=hotel['score'], dpcount=hotel['dpcount'])
+                hotel_item = PriceItem(city_name=cityname, name=hotel['name'], url=self._url(hotel['url']), score=hotel['score'], dpcount=hotel['dpcount'], date=main_data['starttime'])
                 if hotel['id'] in prices:
                     hotel_item['lowest_price'] = prices[hotel['id']]
                 yield hotel_item
             
             if page < total_page:
-                yield self._request(page + 1)
+                yield self._request(city_id=cityid, start_time=starttime, end_time=endtime, page=page + 1)
         else:
             self.logger.warn('Stop crawl at page %i', page)

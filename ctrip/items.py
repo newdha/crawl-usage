@@ -14,4 +14,5 @@ class PriceItem(scrapy.Item):
     url = scrapy.Field()
     score = scrapy.Field()
     dpcount = scrapy.Field()
+    date = scrapy.Field()
     lowest_price = scrapy.Field()

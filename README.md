@@ -8,22 +8,13 @@ python jd/genidf.py -sw ../stop_words.txt ../7564605_question.csv ../question_id
 
 价|\d+|一|二|三|四|五|六|七|八|九|十|零
 
-启东
-南通
-海门
-崇明
-太仓
-常熟
-昆山
-苏州
-无锡
-嘉兴
-平湖
-桐乡
-海宁
-湖州
-杭州
-绍兴
-慈溪
+scrapy crawl price -a cities=cities.txt -a start_time=2018-07-09 -a end_time=2018-07-10 -o 2018-07-09.csv
+scrapy crawl price -a cities=cities.txt -a start_time=2018-07-10 -a end_time=2018-07-11 -o 2018-07-10.csv
+scrapy crawl price -a cities=cities.txt -a start_time=2018-07-11 -a end_time=2018-07-12 -o 2018-07-11.csv
+scrapy crawl price -a cities=cities.txt -a start_time=2018-07-12 -a end_time=2018-07-13 -o 2018-07-12.csv
+scrapy crawl price -a cities=cities.txt -a start_time=2018-07-13 -a end_time=2018-07-14 -o 2018-07-13.csv
+scrapy crawl price -a cities=cities.txt -a start_time=2018-07-14 -a end_time=2018-07-15 -o 2018-07-14.csv
+scrapy crawl price -a cities=cities.txt -a start_time=2018-07-15 -a end_time=2018-07-16 -o 2018-07-15.csv
+scrapy crawl price -a cities=cities.txt -a start_time=2018-07-16 -a end_time=2018-07-17 -o 2018-07-16.csv
 
-scrapy crawl price -a cities=cities.txt -a start_time=2018-07-14 -a end_time=2018-07-15 -o test.csv
+scrapy crawl price -a cities=cities.txt -a start_time=2018-07-01 -a end_time=2018-07-07 -o test.csv
