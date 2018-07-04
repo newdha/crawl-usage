@@ -10,11 +10,6 @@ from jd.items import QuestionItem
 class CommentSpider(scrapy.Spider):
     name = 'question'
     allowed_domains = ['jd.com']
-    question_url = 'http://jd.com/'
-    answer_url = 'http://jd.com/'
-    
-    cur_question_page = 1
-    cur_answer_page = 1
 
     def __init__(self, product_id=None, page=1, *args, **kwargs):
         """

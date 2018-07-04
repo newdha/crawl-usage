@@ -14,13 +14,6 @@ class PriceSpider(scrapy.Spider):
     start_url = 'http://hotels.ctrip.com/Domestic/Tool/AjaxHotelList.aspx'
     allowed_domains = ['ctrip.com']
     
-    start_time = ''
-    end_time = ''
-    cities = ''
-    order_by = '1'
-    star = '5'
-    equip = ''
-    
     def __init__(self, cities=None, start_time=None, end_time=None, order_by='1', star='5', equip='', *args, **kwargs):
         '''
         city_id: 城市列表文件
