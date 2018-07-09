@@ -53,7 +53,7 @@ class PriceSpider(scrapy.Spider):
         )
     
     def start_requests(self):
-        cities = utils.read_lines(self.cities)
+        cities = utils.read_pairs(self.cities).keys()
         
         if ',' in self.start_time:
             for d in self.start_time.split(','):

@@ -6,7 +6,6 @@ Created on 2018年6月28日
 import math
 
 import jieba
-from matplotlib.font_manager import path
 
 
 def docs(w, D):
@@ -74,9 +73,10 @@ def read_lines(path):
     return [ line.rstrip() for line in open(path, encoding='utf-8') ]
 
 
-def read_pairs(path):
+def read_pairs(path, f=str):
     pairs = {}
     content = open(path, 'rb').read().decode('utf-8')
     for line in content.splitlines():
         word, freq = line.strip().split(' ')
-        pairs[word] = float(freq)
+        pairs[word] = f(freq)
+    return pairs

@@ -10,6 +10,7 @@ import argparse
 import csv
 
 import jieba
+
 import utils
 
 if __name__ == '__main__':
@@ -31,7 +32,7 @@ if __name__ == '__main__':
     idf_file = args.idf_file    
     idfs = {}
     if idf_file:
-        idfs = utils.read_pairs(idf_file)
+        idfs = utils.read_pairs(idf_file, float)
     
     scored_rows = []
     field_names = []

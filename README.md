@@ -9,13 +9,6 @@ python jd/genidf.py -sw ../stop_words.txt ../7564605_question.csv ../question_id
 价|\d+|一|二|三|四|五|六|七|八|九|十|零
 
 scrapy crawl price -a cities=cities.txt -a start_time=2018-07-09 -a end_time=2018-07-10 -o 2018-07-09.csv
-scrapy crawl price -a cities=cities.txt -a start_time=2018-07-10 -a end_time=2018-07-11 -o 2018-07-10.csv
-scrapy crawl price -a cities=cities.txt -a start_time=2018-07-11 -a end_time=2018-07-12 -o 2018-07-11.csv
-scrapy crawl price -a cities=cities.txt -a start_time=2018-07-12 -a end_time=2018-07-13 -o 2018-07-12.csv
-scrapy crawl price -a cities=cities.txt -a start_time=2018-07-13 -a end_time=2018-07-14 -o 2018-07-13.csv
-scrapy crawl price -a cities=cities.txt -a start_time=2018-07-14 -a end_time=2018-07-15 -o 2018-07-14.csv
-scrapy crawl price -a cities=cities.txt -a start_time=2018-07-15 -a end_time=2018-07-16 -o 2018-07-15.csv
-scrapy crawl price -a cities=cities.txt -a start_time=2018-07-16 -a end_time=2018-07-17 -o 2018-07-16.csv
 
-scrapy crawl price -a cities=cities.txt -a start_time=2018-07-10,2018-07-07,2018-07-14,2018-07-21,2018-07-28 -o dh.csv
 scrapy crawl price -a cities=cities.txt -a equip=3 -a start_time=2018-07-10,2018-07-07,2018-07-14,2018-07-21,2018-07-28 -o swim.csv
+scrapy crawl price -a cities=cities.txt -a start_time=2018-08-14,2018-08-04,2018-08-11,2018-08-18,2018-08-25 -o xian.csv
