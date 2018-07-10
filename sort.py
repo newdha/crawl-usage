@@ -40,10 +40,12 @@ if __name__ == '__main__':
         reader = csv.DictReader(csvfile, delimiter=',')
         field_names = reader.fieldnames
         for row in reader:
-            if 'score' in row:
-                content = row['content'] + '。' + row['after_user_comment']
-            else:
-                content = row['content'] + '。' + row['answer_content']
+            content = row['content']
+            if 'after_user_comment' in row and len(row['after_user_comment']) > 0:
+                content = content + '。' + row['after_user_comment']
+            if 'answer_content' in row and len(row['answer_content']) > 0:
+                content = content + '。' + row['answer_content']
+            
             words = jieba.cut(content)
             words_set = set()
             for word in words:
