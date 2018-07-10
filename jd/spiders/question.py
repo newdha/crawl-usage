@@ -59,7 +59,7 @@ class CommentSpider(scrapy.Spider):
                 yield question_item
                 
                 if question['answerCount'] > 0:
-                    yield scrapy.Request(url=self._answer_url(question['id'], self.cur_answer_page), callback=self.parse_answer)
+                    yield scrapy.Request(url=self._answer_url(question['id'], 1), callback=self.parse_answer)
                
             yield scrapy.Request(url=self._question_url(cur_page + 1), callback=self.parse_question)
         else:
