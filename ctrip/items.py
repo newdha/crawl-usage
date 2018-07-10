@@ -17,3 +17,9 @@ class PriceItem(scrapy.Item):
     dpcount = scrapy.Field()
     date = scrapy.Field()
     lowest_price = scrapy.Field()
+
+class CommentItem(scrapy.Item):
+    content = scrapy.Field()
+    creation_time = scrapy.Field()
+    useful_vote_count = scrapy.Field()
+    score = scrapy.Field()

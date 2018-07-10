@@ -11,4 +11,6 @@ python jd/genidf.py -sw ../stop_words.txt ../7564605_question.csv ../question_id
 scrapy crawl price -a cities=cities.txt -a start_time=2018-07-09 -a end_time=2018-07-10 -o 2018-07-09.csv
 
 scrapy crawl price -a cities=cities.txt -a equip=3 -a start_time=2018-07-10,2018-07-07,2018-07-14,2018-07-21,2018-07-28 -o swim.csv
-scrapy crawl price -a cities=cities.txt -a start_time=2018-08-14,2018-08-04,2018-08-11,2018-08-18,2018-08-25 -o xian.csv
+scrapy crawl price -a cities=cities.txt -a equip=3 -a start_time=2018-08-14,2018-08-04,2018-08-11,2018-08-18,2018-08-25 -o xian.csv
+
+scrapy crawl comment -a resourceId=1444 -a resourcetype=2 -a poiID=75682 -a districtId=7 -o bingmayong.csv
