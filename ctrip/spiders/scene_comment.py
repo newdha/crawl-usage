@@ -6,15 +6,15 @@ import scrapy
 from ctrip.items import CommentItem
 
 
-class CommentSpider(scrapy.Spider):
-    name = 'comment'
+class SceneCommentSpider(scrapy.Spider):
+    name = 'scene_comment'
     start_url = 'http://you.ctrip.com/destinationsite/TTDSecond/SharedView/AsynCommentView'
     allowed_domains = ['ctrip.com']
     
     def __init__(self, resourceId=None, resourcetype=None, poiID=None, districtId=None, order=1, *args, **kwargs):
         '''
         '''
-        super(CommentSpider, self).__init__(*args, **kwargs)
+        super(SceneCommentSpider, self).__init__(*args, **kwargs)
         self.resource_id = resourceId
         self.resource_type = resourcetype
         self.poi_id = poiID
