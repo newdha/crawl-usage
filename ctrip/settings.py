@@ -90,6 +90,6 @@ ROBOTSTXT_OBEY = True
 
 FEED_EXPORT_ENCODING = 'utf-8'
 # price
-# FEED_EXPORT_FIELDS = ['id', 'name', 'city_name', 'url', 'score', 'dpcount', 'date', 'lowest_price']
+#FEED_EXPORT_FIELDS = ['id', 'name', 'city_name', 'url', 'score', 'dpcount', 'date', 'lowest_price']
 # comment
 FEED_EXPORT_FIELDS = ['creation_time', 'useful_vote_count', 'score', 'content']

@@ -47,7 +47,7 @@ class SceneCommentSpider(scrapy.Spider):
         self.logger.info('Parse function called on %s', response.url)
         
         comments = response.selector.xpath('//div[@itemprop="review"]')
-        if len(comments) > 0:
+        if len(comments) > 1:
             page = int(response.selector.xpath('//a[@class="current"]/text()').extract_first())
             total_page = int(response.selector.xpath('//b[@class="numpage"]/text()').extract_first())
         
