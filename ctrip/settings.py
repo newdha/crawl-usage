@@ -51,9 +51,9 @@ NEWSPIDER_MODULE = 'ctrip.spiders'
 
 # Enable or disable downloader middlewares
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
-DOWNLOADER_MIDDLEWARES = {
-   'ctrip.middlewares.CtripDownloaderMiddleware': 543,
-}
+# DOWNLOADER_MIDDLEWARES = {
+#    'ctrip.middlewares.CtripDownloaderMiddleware': 543,
+# }
 
 # Enable or disable extensions
 # See https://doc.scrapy.org/en/latest/topics/extensions.html
