@@ -5,9 +5,16 @@
 # See documentation in:
 # https://doc.scrapy.org/en/latest/topics/spider-middleware.html
 
+from time import sleep
+
 from scrapy import signals
+from scrapy.http import HtmlResponse
+from selenium.webdriver.support.ui import Select
 
 
+# from selenium.webdriver.common.by import By
+# from selenium.webdriver.support import expected_conditions as EC
+# from selenium.webdriver.support.wait import WebDriverWait
 class CtripSpiderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the spider middleware does not modify the
@@ -78,7 +85,45 @@ class CtripDownloaderMiddleware(object):
         # - or return a Request object
         # - or raise IgnoreRequest: process_exception() methods of
         #   installed downloader middleware will be called
-        return None
+        
+        page = request.meta.get('page', 1)
+                    
+        spider.browser.get(request.url)
+        print(request.url)
+        print(spider.browser.title)
+        # spider.browser.page_source  # locate page_source
+        # print(spider.browser.page_source)
+        
+#         locator = (By.CLASS_NAME, 'select_sort')
+#         WebDriverWait(spider.browser, 50, 1).until(EC.presence_of_element_located(locator))
+        
+        ele = Select(spider.browser.find_element_by_class_name('select_sort'))
+        ele.select_by_value('1')
+        sleep(5)
+        
+            
+        if page > 1:
+            input = spider.browser.find_element_by_id('cPageNum')
+            submit = spider.browser.find_element_by_id('cPageBtn')
+            input.clear()
+            input.send_keys(page)
+            submit.click()
+            sleep(5)
+        
+        sleep(5)
+        har = spider.proxy.har
+        
+        comment_url = ''
+        comment_conent = ''
+
+        for entry in har['log']['entries']:
+            if 'AjaxHotelCommentList' in entry['request']['url'] and 'orderBy=1' in entry['request']['url']:
+                comment_url = entry['request']['url']
+                comment_conent = entry['response']['content']['text']
+                # print(comment_url)
+                # print(comment_conent)
+        
+        return HtmlResponse(url=comment_url, body=comment_conent, request=request, encoding='utf-8', status=200)
 
     def process_response(self, request, response, spider):
         # Called with the response returned from the downloader.
