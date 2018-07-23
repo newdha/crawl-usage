@@ -6,7 +6,10 @@ from time import sleep
 import scrapy
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import Select
+from selenium.webdriver.support.wait import WebDriverWait
 
 from ctrip.items import CommentItem
 
@@ -34,10 +37,22 @@ class HotelCommentSpider(scrapy.Spider):
         print("spider closed")
 #         self.proxy.close()
 #         self.server.stop()
-        self.browser.close()
+#         self.browser.close()
     
     def start_requests(self):
         yield scrapy.Request(url=self.start_url, callback=self.parse, dont_filter=True)
+        
+    def _gen_comment_item(self, comment):
+        content = comment.find_element_by_xpath('.//div[@class="J_commentDetail"]').text
+        creation_time = comment.find_element_by_xpath('.//span[@class="time"]').text[3:]
+        useful_vote_count = re.sub("\D", "", comment.find_element_by_xpath('.//div[@class="comment_bar"]//span[@class="n"]').text)
+        score = comment.find_element_by_xpath('.//span[@class="score"]/span').text
+        return CommentItem(
+                    content=content,
+                    creation_time=creation_time,
+                    useful_vote_count=useful_vote_count,
+                    score=score
+                )
 
     def parse(self, response):
         self.logger.info('Parse function called on %s', response.url)
@@ -49,30 +64,26 @@ class HotelCommentSpider(scrapy.Spider):
         sleep(5)
         
         for page in range(1, total_page + 1):
-            print("At page %i" % page)
+            self.logger.info('Process page %s', page)
             if page > 1:
                 page_input = self.browser.find_element_by_id('cPageNum')
                 page_submit = self.browser.find_element_by_id('cPageBtn')
                 page_input.clear()
                 page_input.send_keys(page)
                 page_submit.click()
-                sleep(3)
+                
+                try:
+                    WebDriverWait(self.browser, 10).until(EC.text_to_be_present_in_element((By.XPATH, '//div[@class="c_page"]//a[@class="current"]/span'), str(page)))
+                except:
+                    self.logger.info('Goto page error at %s', page)
+                    next_page = self.browser.find_element_by_class_name('c_down')
+                    next_page.click()
+                    WebDriverWait(self.browser, 10).until(EC.text_to_be_present_in_element((By.XPATH, '//div[@class="c_page"]//a[@class="current"]/span'), str(page)))
+                sleep(1)
             
             comments = self.browser.find_elements_by_xpath('//div[@class="comment_detail_list"]/div')
             for comment in comments:
-                content = comment.find_element_by_xpath('.//div[@class="J_commentDetail"]').text
-                # print(content)
-                creation_time = comment.find_element_by_xpath('.//span[@class="time"]').text[3:]
-                # print(creation_time)
-                useful_vote_count = re.sub("\D", "", comment.find_element_by_xpath('.//div[@class="comment_bar"]//span[@class="n"]').text)
-                # print(useful_vote_count)
-                score = comment.find_element_by_xpath('.//span[@class="score"]/span').text
-                # print(score)
-                comment_item = CommentItem(
-                    content=content,
-                    creation_time=creation_time,
-                    useful_vote_count=useful_vote_count,
-                    score=score
-                )
+                comment_item = self._gen_comment_item(comment)
+                
                 yield comment_item
         
