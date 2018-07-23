@@ -75,10 +75,16 @@ class HotelCommentSpider(scrapy.Spider):
                 try:
                     WebDriverWait(self.browser, 10).until(EC.text_to_be_present_in_element((By.XPATH, '//div[@class="c_page"]//a[@class="current"]/span'), str(page)))
                 except:
-                    self.logger.info('Goto page error at %s', page)
+                    self.logger.warn('Goto page error at %s', page)
                     next_page = self.browser.find_element_by_class_name('c_down')
                     next_page.click()
-                    WebDriverWait(self.browser, 10).until(EC.text_to_be_present_in_element((By.XPATH, '//div[@class="c_page"]//a[@class="current"]/span'), str(page)))
+                    try:
+                        WebDriverWait(self.browser, 10).until(EC.text_to_be_present_in_element((By.XPATH, '//div[@class="c_page"]//a[@class="current"]/span'), str(page)))
+                    except:
+                        self.logger.warn('Next page error at %s', page)
+                        sleep(5)
+                        next_page.click()
+                        WebDriverWait(self.browser, 10).until(EC.text_to_be_present_in_element((By.XPATH, '//div[@class="c_page"]//a[@class="current"]/span'), str(page)))
                 sleep(1)
             
             comments = self.browser.find_elements_by_xpath('//div[@class="comment_detail_list"]/div')
