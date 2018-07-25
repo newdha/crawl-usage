@@ -13,6 +13,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 from ctrip.items import CommentItem
 
+
 logging.getLogger("selenium.webdriver.remote.remote_connection").setLevel(logging.INFO)
 
 
@@ -21,7 +22,9 @@ class HotelCommentSpider(scrapy.Spider):
     start_url = 'http://hotels.ctrip.com//hotel/{0}.html'
     allowed_domains = ['ctrip.com']
     
-    def __init__(self, hotelId=None, *args, **kwargs):
+    start_page = 1
+    
+    def __init__(self, startPage=1, hotelId=None, *args, **kwargs):
         super(HotelCommentSpider, self).__init__(*args, **kwargs)
         self.start_url = self.start_url.format(hotelId)
         
@@ -32,12 +35,13 @@ class HotelCommentSpider(scrapy.Spider):
         # chrome_options.add_argument('--headless')
         self.browser = webdriver.Chrome(chrome_options=chrome_options)
         self.browser.implicitly_wait(10)
+        self.start_page = int(startPage)
         
     def closed(self, spider):
         print("spider closed")
 #         self.proxy.close()
 #         self.server.stop()
-#         self.browser.close()
+        self.browser.close()
     
     def start_requests(self):
         yield scrapy.Request(url=self.start_url, callback=self.parse, dont_filter=True)
@@ -45,8 +49,16 @@ class HotelCommentSpider(scrapy.Spider):
     def _gen_comment_item(self, comment):
         content = comment.find_element_by_xpath('.//div[@class="J_commentDetail"]').text
         creation_time = comment.find_element_by_xpath('.//span[@class="time"]').text[3:]
-        useful_vote_count = re.sub("\D", "", comment.find_element_by_xpath('.//div[@class="comment_bar"]//span[@class="n"]').text)
-        score = comment.find_element_by_xpath('.//span[@class="score"]/span').text
+        
+        class_name = comment.find_elements_by_tag_name('div')[0].get_attribute('class')
+        if 'J_ctrip_pop' in class_name:
+            useful_vote_count = re.sub("\D", "", comment.find_element_by_xpath('.//div[@class="comment_bar"]//span[@class="n"]').text)
+            score = comment.find_element_by_xpath('.//span[@class="score"]/span').text
+        else:
+            # 非携程用户
+            useful_vote_count = 0
+            score = 0
+    
         return CommentItem(
                     content=content,
                     creation_time=creation_time,
@@ -63,7 +75,7 @@ class HotelCommentSpider(scrapy.Spider):
         ele.select_by_value('1')
         sleep(5)
         
-        for page in range(1, total_page + 1):
+        for page in range(self.start_page, total_page + 1):
             self.logger.info('Process page %s', page)
             if page > 1:
                 page_input = self.browser.find_element_by_id('cPageNum')
@@ -82,8 +94,9 @@ class HotelCommentSpider(scrapy.Spider):
                         WebDriverWait(self.browser, 10).until(EC.text_to_be_present_in_element((By.XPATH, '//div[@class="c_page"]//a[@class="current"]/span'), str(page)))
                     except:
                         self.logger.warn('Next page error at %s', page)
-                        sleep(5)
-                        next_page.click()
+                        next_page_index = self.browser.find_element_by_xpath('//div[@class="c_page"]//a[@value="' + str(page) + '"]')
+                        next_page_index.click()
+                        
                         WebDriverWait(self.browser, 10).until(EC.text_to_be_present_in_element((By.XPATH, '//div[@class="c_page"]//a[@class="current"]/span'), str(page)))
                 sleep(1)
             

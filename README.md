@@ -14,7 +14,8 @@ scrapy crawl price -a cities=cities.txt -a equip=3 -a start_time=2018-08-14,2018
 
 scrapy crawl price -a cities=cities.txt -a start_time=2018-08-14,2018-08-04,2018-08-11,2018-08-18,2018-08-25 -o xian.csv
 
-scrapy crawl hotel_comment -a hotelId=420028 -o 420028.csv
+scrapy crawl hotel_comment -a hotelId=1226350 -o 1226350.csv
+scrapy crawl hotel_comment -a hotelId=433698 -a startPage=383 -o 433698.csv
 
 scrapy crawl scene_comment -a resourceId=1444 -a resourcetype=2 -a poiID=75682 -a districtId=7 -o 秦始皇兵马俑博物馆.csv
 scrapy crawl scene_comment -a resourceId=5420 -a resourcetype=2 -a poiID=76739 -a districtId=7 -o 秦始皇陵.csv
