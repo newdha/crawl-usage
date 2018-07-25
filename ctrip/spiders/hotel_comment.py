@@ -47,7 +47,7 @@ class HotelCommentSpider(scrapy.Spider):
         yield scrapy.Request(url=self.start_url, callback=self.parse, dont_filter=True)
         
     def _gen_comment_item(self, comment):
-        content = comment.find_element_by_xpath('.//div[@class="J_commentDetail"]').text
+        content = comment.find_element_by_xpath('.//div[@class="comment_txt"]/div[1]').text
         creation_time = comment.find_element_by_xpath('.//span[@class="time"]').text[3:]
         
         class_name = comment.find_elements_by_tag_name('div')[0].get_attribute('class')
