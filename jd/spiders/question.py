@@ -7,7 +7,7 @@ import scrapy
 from jd.items import QuestionItem
 
 
-class CommentSpider(scrapy.Spider):
+class QuestionSpider(scrapy.Spider):
     name = 'question'
     allowed_domains = ['jd.com']
 
@@ -17,7 +17,7 @@ class CommentSpider(scrapy.Spider):
         same_product：只看当前商品评价
         sort_type：6/时间排序， 5/推荐排序
         """
-        super(CommentSpider, self).__init__(*args, **kwargs)
+        super(QuestionSpider, self).__init__(*args, **kwargs)
         self.cur_question_page = int(page)
         self.question_url = 'http://question.jd.com/question/getQuestionAnswerList.action?productId=%s' % product_id
         self.answer_url = 'http://question.jd.com/question/getAnswerListById.action?'

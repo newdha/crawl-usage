@@ -1,6 +1,13 @@
-scrapy crawl comment -a product_id=5174007 -o 5174007_comment.csv
-scrapy crawl comment -a product_id=831721 -a sort_type=5 -o 831721_comment_2.csv
-scrapy crawl question -a product_id=5174007 -o 5174007_question.csv
+scrapy crawl stock_hxjrbd -o stock_hxjrbd.json
+
+scrapy crawl comment -a product_id=5267712 -o 5267712_comment.csv
+scrapy crawl comment -a product_id=1318300 -o 1318300_comment.csv
+scrapy crawl comment -a product_id=4899954 -o 4899954_comment.csv
+scrapy crawl comment -a product_id=4979498 -o 4979498_comment.csv
+
+
+scrapy crawl comment -a product_id=2865858 -o 2865858_comment.csv
+scrapy crawl question -a product_id=2865858 -o 2865858_question.csv
 
 python jd/genidf.py -sw ../stop_words.txt ../831721_comment.csv ../comment_idf.txt
 python jd/genidf.py -sw ../stop_words.txt ../7564605_question.csv ../question_idf.txt
@@ -10,14 +17,14 @@ python jd/genidf.py -sw ../stop_words.txt ../7564605_question.csv ../question_id
 
 scrapy crawl price -a cities=cities.txt -a start_time=2018-07-09 -a end_time=2018-07-10 -o 2018-07-09.csv
 
-scrapy crawl price -a cities=cities.txt -a equip=3 -a start_time=2018-08-14,2018-08-04,2018-08-11,2018-08-18,2018-08-25 -o swim.csv
+scrapy crawl price -a cities=cities.txt -a equip=3 -a start_time=2018-09-19,2018-10-03,2018-10-10 -o swim.csv
 
-scrapy crawl price -a cities=cities.txt -a start_time=2018-08-14,2018-08-04,2018-08-11,2018-08-18,2018-08-25 -o xian.csv
+scrapy crawl price -a cities=cities.txt -a equip=3 -a star=5,4 -a start_time=2018-10-03,2018-10-10,2018-10-24 -o haining.csv
 
-scrapy crawl hotel_comment -a hotelId=1226350 -o 1226350.csv
-scrapy crawl hotel_comment -a hotelId=433698 -a startPage=383 -o 433698.csv
+scrapy crawl hotel_comment -a hotelId=1303455 -o 1303455.csv
+scrapy crawl hotel_comment -a hotelId=420015 -a startPage=225 -o 420015.csv
 
-scrapy crawl scene_comment -a resourceId=1444 -a resourcetype=2 -a poiID=75682 -a districtId=7 -o 秦始皇兵马俑博物馆.csv
+scrapy crawl scene_comment -a resourceId=61319 -a resourcetype=4 -a poiID=102171 -a districtId=86 -o 海宁中国皮革城.csv
 scrapy crawl scene_comment -a resourceId=5420 -a resourcetype=2 -a poiID=76739 -a districtId=7 -o 秦始皇陵.csv
 scrapy crawl scene_comment -a resourceId=136558 -a resourcetype=2 -a poiID=10758966 -a districtId=7 -o 长恨歌演出.csv
 scrapy crawl scene_comment -a resourceId=1443 -a resourcetype=2 -a poiID=75681 -a districtId=7 -o 华清宫.csv
@@ -33,6 +40,7 @@ scrapy crawl scene_comment -a resourceId=1449 -a resourcetype=2 -a poiID=75686 -
 scrapy crawl scene_comment -a resourceId=140439 -a resourcetype=2 -a poiID=101097 -a districtId=7 -o 西安碑林博物馆.csv
 scrapy crawl scene_comment -a resourceId=52685 -a resourcetype=2 -a poiID=84625 -a districtId=7 -o 大明宫国家遗址公园.csv
 scrapy crawl scene_comment -a resourceId=52727 -a resourcetype=2 -a poiID=84640 -a districtId=7 -o 书院门文化街.csv
+碑林博物馆 8:00-18:15
 博物馆在永宁门附近
 尚武门，就是唐朝玄武门事变的旧址
 一般到西安旅游的人都会选择走南门（永宁门）入口。永宁门是保存最完好，规模最大的一道城门，接待习主席和外国友人时，演出便安排在这道城门
