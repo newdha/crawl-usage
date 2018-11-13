@@ -12,9 +12,6 @@ class StockHxjrbdSpider(scrapy.Spider):
     allowed_domains = ['hexun.com']
     
     def __init__(self, *args, **kwargs):
-        """
-        page:起始页
-        """
         super(StockHxjrbdSpider, self).__init__(*args, **kwargs)
         self.list_url = 'http://open.tool.hexun.com/MongodbNewsService/newsListPageByJson.jsp?id=107825103&s=70&priority=0&callback=hx&cp=%s'
         
@@ -22,7 +19,7 @@ class StockHxjrbdSpider(scrapy.Spider):
         return self.list_url + '&cp=%s' % page
     
     def start_requests(self):
-        yield scrapy.Request(url=self._list_url(1030), callback=self.parse)
+        yield scrapy.Request(url=self._list_url(1), callback=self.parse)
         
     def parse_detail(self, response):
         self.logger.info('Parse function called on %s', response.url)
